@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😈</text></svg>">
+    <title>tprank — Все пранки</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+        
+        body { 
+            background-color: #0a0510; 
+            background-image: radial-gradient(circle at 50% 0%, #2a1042 0%, #0a0510 70%); 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh; 
+            padding-bottom: 40px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        /* ===== ШАПКА С БАННЕРОМ И ЛОГОТИПОМ ===== */
+        .header-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Баннер */
+        .banner-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Логотип (накладывается на баннер) */
+        .logo-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #0a0510;
+            padding: 5px;
+            object-fit: contain;
+            margin-top: -60px; /* Поднимаем логотип на баннер */
+            z-index: 2;
+            box-shadow: 0 5px 20px rgba(0, 255, 100, 0.3);
+            border: 3px solid #00ff64;
+        }
+
+        /* Подзаголовок */
+        .subtitle { 
+            color: #888; 
+            font-size: 16px; 
+            margin-top: 15px; 
+            text-align: center; 
+            padding: 0 20px;
+        }
+
+        /* ===== СЕТКА ПРАНКОВ ===== */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+            gap: 20px; 
+            width: 100%; 
+            max-width: 1000px; 
+            padding: 0 20px;
+        }
+        
+        .card { 
+            background: #150a22; 
+            border: 1px solid #4a2069; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            text-decoration: none; 
+            color: #fff; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px rgba(0, 255, 100, 0.2); 
+            border-color: #00ff64; 
+        }
+        
+        .card-img { 
+            width: 100%; 
+            height: 200px; 
+            background-size: cover; 
+            background-position: center; 
+            position: relative; 
+        }
+        
+        .badge-new { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            background: #00ff64; 
+            color: #000; 
+            font-weight: 900; 
+            font-size: 12px; 
+            padding: 4px 10px; 
+            border-radius: 10px; 
+            letter-spacing: 1px; 
+        }
+        
+        .card-title { 
+            padding: 15px; 
+            font-size: 18px; 
+            font-weight: 800; 
+            text-align: center; 
+            background: #1a0a2e; 
+        }
+        
+        .card-desc { 
+            padding: 0 15px 15px; 
+            font-size: 13px; 
+            color: #aaa; 
+            text-align: center; 
+        }
+        
+        .loading { 
+            text-align: center; 
+            color: #888; 
+            font-size: 16px; 
+            margin-top: 50px; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка с баннером и логотипом -->
+    <div class="header-container">
+        <img src="https://tprank.github.io/cdn/banner/banner.png" class="banner-img" alt="Баннер">
+        <img src="https://tprank.github.io/cdn/logo/logo.png" class="logo-img" alt="Логотип">
+        <div class="subtitle">Выбирай пранк — записывай на NFC-метку</div>
+    </div>
+
+    <!-- Сетка пранков -->
+    <div class="grid" id="prankGrid">
+        <div class="loading">Загрузка пранков...</div>
+    </div>
+
+    <!-- Подключаем Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <script>
+        // Твой Firebase конфиг
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1Qrdl-tuxjodpFgNDdpAtF_VSCv90rWw",
+            authDomain: "trty1-39fcb.firebaseapp.com",
+            databaseURL: "https://trty1-39fcb-default-rtdb.firebaseio.com",
+            projectId: "trty1-39fcb",
+            storageBucket: "trty1-39fcb.firebasestorage.app",
+            messagingSenderId: "438515366192",
+            appId: "1:438515366192:web:f77d084c734df6935d70f5"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const grid = document.getElementById('prankGrid');
+
+        // Читаем список пранков из Firebase
+        db.ref('tprank_menu').on('value', (snapshot) => {
+            const data = snapshot.val();
+            grid.innerHTML = '';
+
+            if (!data) {
+                grid.innerHTML = '<div class="loading">Пока нет пранков. Добавь их в админке!</div>';
+                return;
+            }
+
+            // Превращаем объект в массив и сортируем по дате (новые сверху)
+            const pranks = Object.values(data).sort((a, b) => b.createdAt - a.createdAt);
+
+            pranks.forEach(prank => {
+                const card = document.createElement('a');
+                card.href = prank.url; // Ссылка на папку (например, c/)
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-img" style="background-image: url('${prank.image}');">
+                        ${prank.isNew ? '<div class="badge-new">NEW</div>' : ''}
+                    </div>
+                    <div class="card-title">${prank.title}</div>
+                    <div class="card-desc">${prank.desc || ''}</div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
