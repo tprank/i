@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1000 500%22><rect width=%221000%22 height=%22500%22 fill=%22%2300AF%22/><circle cx=%22500%22 cy=%22250%22 r=%22120%22 fill=%22%23FEC50C%22/><circle cx=%22500%22 cy=%22250%22 r=%22100%22 fill=%22%2300AF%22/><path d=%22M400 200 Q500 150 600 200 Q500 250 400 200%22 fill=%22%23FEC50C%22/><path d=%22M400 250 Q500 200 600 250 Q500 300 400 250%22 fill=%22%23FEC50C%22/><path d=%22M400 300 Q500 250 600 300 Q500 350 400 300%22 fill=%22%23FEC50C%22/><circle cx=%22500%22 cy=%22150%22 r=%2215%22 fill=%22%23FEC50C%22/></svg>">
     <title>Ошибка</title>
     <style>
@@ -19,8 +18,8 @@
         .profile-pic { width: 280px; height: 280px; border-radius: 50%; background-image: url('https://tprank.github.io/cdn/kz.webp'); background-size: cover; background-position: center; margin-bottom: 30px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 10px 40px rgba(255,255,255,0.15); }
         .profile-pic span { position: absolute; color: #fff; font-weight: 900; font-size: 42px; text-shadow: 0 4px 15px rgba(0,0,0,0.9); z-index: 2; }
         .btn-mute { background: #2c2c2e; color: #fff; border: none; padding: 16px 40px; border-radius: 25px; font-size: 20px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .btn-channel { background: #00d68f; color: #fff; border: none; padding: 16px 40px; border-radius: 25px; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 15px rgba(0, 214, 143, 0.4); transition: 0.2s; }
-        .btn-channel:hover { background: #00b87a; transform: scale(1.05); }
+        .btn-all { background: #1a0a2e; color: #ccc; border: 1px solid #333; padding: 14px 36px; border-radius: 25px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
+        .btn-all:hover { background: #2a1042; color: #fff; border-color: #555; }
     </style>
 </head>
 <body>
@@ -34,7 +33,7 @@
     <div id="memeScreen">
         <div class="profile-pic"><span>tprank</span></div>
         <button class="btn-mute">🔇 Mute</button>
-        <a href="https://max.ru/join/mU199miD-ymwM-nPMRzVIHxag_QrO8DJvQfWmImWfJ8" target="_blank" class="btn-channel">📢 Перейти в канал</a>
+        <a href="https://tprank.github.io/i/" class="btn-all">🗂 Все пранки</a>
     </div>
     <audio id="prankAudio" src="https://tprank.github.io/cdn/kazakhstan-ugrozhaet-bombordirovkoi.mp3" preload="auto" loop></audio>
     <script>
@@ -43,10 +42,10 @@
         function triggerPrank() {
             if (isTriggered) return;
             isTriggered = true;
-            audio.volume = 1.;0; 
-            audio.play().catch(e => console.log border(e:));
-            document.getElementById('errorScreen').style none.display = 'none';
-            document.getElementById;('memeScreen').style.display = ' paddingflex';
+            audio.volume = 1.0; 
+            audio.play().catch(e => console.log(e));
+            document.getElementById('errorScreen').style.display = 'none';
+            document.getElementById('memeScreen').style.display = 'flex';
         }
         document.body.addEventListener('click', triggerPrank);
         document.body.addEventListener('touchstart', triggerPrank, { passive: true });
