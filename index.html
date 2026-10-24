@@ -73,7 +73,7 @@
         /* ===== СЕТКА ПРАНКОВ ===== */
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
             gap: 15px; 
             width: 100%; 
             max-width: 1000px; 
@@ -86,18 +86,16 @@
             border: 1px solid #4a2069; 
             border-radius: 16px; 
             padding: 20px;
-            text-decoration: none; 
-            color: #fff; 
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; 
             display: flex; 
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .card-top {
+            display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 15px;
-        }
-        .card:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 10px 20px rgba(0, 255, 100, 0.1); 
-            border-color: #00ff64; 
         }
 
         .card-title {
@@ -113,11 +111,45 @@
             font-weight: 700;
             font-size: 14px;
             white-space: nowrap;
+            text-decoration: none;
             transition: 0.2s;
         }
-        .card:hover .btn-open {
+        .btn-open:hover {
             background: #00ff64;
             color: #000;
+        }
+
+        /* Блок с ссылкой и копированием */
+        .card-bottom {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #0a0510;
+            border: 1px solid #2a1042;
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+
+        .prank-url {
+            flex: 1;
+            font-size: 12px;
+            color: #888;
+            font-family: monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Кнопка-картинка */
+        .btn-copy-img {
+            height: 32px; /* Фиксированная высота, чтобы не ломало карточку */
+            width: auto;
+            object-fit: contain;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-copy-img:hover {
+            opacity: 0.8;
         }
         
         .loading { 
@@ -138,7 +170,6 @@
             font-size: 14px;
         }
 
-        /* Делаем ссылку на твой сайт заметной */
         .footer a {
             color: #00ff64;
             text-decoration: none;
@@ -169,7 +200,7 @@
         <div class="loading">Загрузка пранков...</div>
     </div>
 
-    <!-- Подвал со ссылкой на твой основной сайт -->
+    <!-- Подвал -->
     <div class="footer">
         Сделано с душой · <a href="https://tretiy1337.ru" target="_blank">tretiy1337.ru</a>
     </div>
@@ -192,6 +223,10 @@
         const db = firebase.database();
 
         const grid = document.getElementById('prankGrid');
+        
+        // Ссылки на твои картинки кнопок
+        const IMG_COPY = 'https://tprank.github.io/cdn/buttons/copy.png';
+        const IMG_COPIED = 'https://tprank.github.io/cdn/buttons/copied.png';
 
         db.ref('tprank_menu').on('value', (snapshot) => {
             const data = snapshot.val();
@@ -203,19 +238,44 @@
             }
 
             const pranks = Object.values(data).sort((a, b) => b.createdAt - a.createdAt);
+            const baseUrl = 'https://tprank.github.io/i/';
 
             pranks.forEach(prank => {
-                const card = document.createElement('a');
-                card.href = prank.url;
+                const fullUrl = prank.url.startsWith('http') ? prank.url : baseUrl + prank.url;
+                const shortUrl = prank.url.startsWith('http') ? prank.url : 'tprank.github.io/i/' + prank.url;
+
+                const card = document.createElement('div');
                 card.className = 'card';
                 
+                // Обрати внимание: в onclick передаем this (саму картинку) и ссылку
                 card.innerHTML = `
-                    <div class="card-title">${prank.title}</div>
-                    <div class="btn-open">Открыть</div>
+                    <div class="card-top">
+                        <div class="card-title">${prank.title}</div>
+                        <a href="${fullUrl}" class="btn-open" target="_blank">Открыть</a>
+                    </div>
+                    <div class="card-bottom">
+                        <div class="prank-url" title="${shortUrl}">${shortUrl}</div>
+                        <img src="${IMG_COPY}" class="btn-copy-img" onclick="copyLink(this, '${fullUrl}')" alt="Копировать">
+                    </div>
                 `;
                 grid.appendChild(card);
             });
         });
+
+        // Функция копирования с подменой картинки
+        function copyLink(imgElement, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Меняем картинку на "Скопировано"
+                imgElement.src = IMG_COPIED;
+                
+                // Через 2 секунды возвращаем обратно
+                setTimeout(() => {
+                    imgElement.src = IMG_COPY;
+                }, 2000);
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+            });
+        }
     </script>
 </body>
 </html>
