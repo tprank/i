@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😈</text></svg>">
     <title>Ошибка</title>
     <style>
@@ -14,13 +13,13 @@
         .error-icon { width: 180px; height: 180px; margin-bottom: 40px; }
         .error-icon svg { width: 100%; height: 100%; }
         h1 { font-size: 24px; font-weight: 500; margin-bottom: 40px; text-align: center; }
-        .btn-reload { background: #2c2c2e; color: #fff: 16px 50px; border-radius: 30px; font-size: 20px; font-weight: 600; cursor: pointer; }
+        .btn-reload { background: #2c2c2e; color: #fff; border: none; padding: 16px 50px; border-radius: 30px; font-size: 20px; font-weight: 600; cursor: pointer; }
         #memeScreen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 20px; }
         .profile-pic { width: 280px; height: 280px; border-radius: 50%; background-image: url('https://tprank.github.io/cdn/ryangosling.jpeg'); background-size: cover; background-position: center; margin-bottom: 30px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 10px 40px rgba(255,255,255,0.15); }
         .profile-pic span { position: absolute; color: #fff; font-weight: 900; font-size: 42px; text-shadow: 0 4px 15px rgba(0,0,0,0.9); z-index: 2; }
         .btn-mute { background: #2c2c2e; color: #fff; border: none; padding: 16px 40px; border-radius: 25px; font-size: 20px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .btn-channel { background: #00d68f; color: #fff; border: none; padding: 16px 40px; border-radius: 25px; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 15px rgba(0, 214, 143, 0.4); transition: 0.2s; }
-        .btn-channel:hover { background: #00b87a; transform: scale(1.05); }
+        .btn-all { background: #1a0a2e; color: #ccc; border: 1px solid #333; padding: 14px 36px; border-radius: 25px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
+        .btn-all:hover { background: #2a1042; color: #fff; border-color: #555; }
     </style>
 </head>
 <body>
@@ -34,7 +33,7 @@
     <div id="memeScreen">
         <div class="profile-pic"><span>tprank</span></div>
         <button class="btn-mute">🔇 Mute</button>
-        <a href="https://max.ru/join/mU199miD-ymwM-nPMRzVIHxag_QrO8DJvQfWmImWfJ8" target="_blank" class="btn-channel">📢 Перейти в канал</a>
+        <a href="https://tprank.github.io/i/" class="btn-all">🗂 Все пранки</a>
     </div>
     <audio id="prankAudio" src="https://tprank.github.io/cdn/zhiostkaia-otryzhka.mp3" preload="auto" loop></audio>
     <script>
