@@ -3,21 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Загрузка...</title>
+    <title></title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .loader { border: 4px solid #4a2069; border-top: 4px solid #00ff64; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h1 { font-size: 24px; color: #d4a0ff; margin-bottom: 10px; }
-        p { color: #888; }
+        body { background-color: #000; color: #fff; margin: 0; overflow: hidden; }
     </style>
 </head>
 <body>
-    <div class="loader"></div>
-    <h1>Перенаправление...</h1>
-    <p id="status">Пожалуйста, подождите.</p>
-
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
@@ -33,23 +24,15 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Читаем настройку для МЕТКИ 2
+        // Мгновенный запрос к базе
         db.ref('tprank_redirects/tag2').once('value').then(snap => {
-            if (snap.exists()) {
-                const targetUrl = snap.val().url;
-                if (targetUrl) {
-                    window.location.replace(targetUrl);
-                } else {
-                    document.getElementById('status').textContent = 'Ссылка не настроена.';
-                    document.querySelector('.loader').style.display = 'none';
-                }
+            if (snap.exists() && snap.val().url) {
+                window.location.replace(snap.val().url);
             } else {
-                document.getElementById('status').textContent = 'Метка не настроена в админке.';
-                document.querySelector('.loader').style.display = 'none';
+                document.body.innerHTML = '<h1 style="text-align:center; margin-top: 50px; font-family: sans-serif;">Метка не настроена</h1>';
             }
         }).catch(e => {
-            document.getElementById('status').textContent = 'Ошибка базы данных.';
-            document.querySelector('.loader').style.display = 'none';
+            document.body.innerHTML = '<h1 style="text-align:center; margin-top: 50px; font-family: sans-serif; color: red;">Ошибка</h1>';
         });
     </script>
 </body>
