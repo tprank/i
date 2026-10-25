@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💥</text></svg>">
+    
+    <title>Критический сбой</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh; 
+            width: 100vw; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            cursor: pointer; 
+        }
+
+        #errorScreen { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            height: 100%; 
+            padding: 20px; 
+            z-index: 10;
+        }
+        .error-icon { width: 180px; height: 180px; margin-bottom: 40px; }
+        .error-icon svg { width: 100%; height: 100%; }
+        h1 { font-size: 24px; font-weight: 500; margin-bottom: 40px; text-align: center; }
+        .btn-reload { 
+            background: #2c2c2e; 
+            color: #fff; 
+            border: none; 
+            padding: 16px 50px; 
+            border-radius: 30px; 
+            font-size: 20px; 
+            font-weight: 600; 
+            cursor: pointer; 
+        }
+        
+        #iframeContainer {
+            display: none; 
+            width: 100vw; 
+            height: 100vh; 
+            position: fixed; 
+            inset: 0; 
+            z-index: 9999;
+            background: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="errorScreen">
+        <div class="error-icon">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="#FFCC00" stroke-width="2"/>
+                <path d="M50 25L25 75H75L50 25Z" fill="#FFCC00"/>
+                <rect x="47" y="40" width="6" height="20" rx="3" fill="#000"/>
+                <circle cx="50" cy="65" r="3" fill="#000"/>
+            </svg>
+        </div>
+        <h1>Произошла неизвестная ошибка</h1>
+        <button class="btn-reload">Перезагрузить</button>
+    </div>
+
+    <div id="iframeContainer">
+        <iframe id="crashIframe" allowfullscreen></iframe>
+    </div>
+
+    <audio id="prankAudio" src="https://tprank.github.io/cdn/zvuk-zapuska-vindy-na-polnuiu-gromkost-300.mp3" preload="auto" loop></audio>
+
+    <script>
+        const audio = document.getElementById('prankAudio');
+        let isTriggered = false;
+
+        function triggerPrank() {
+            if (isTriggered) return;
+            isTriggered = true;
+            
+            audio.volume = 1.0; 
+            audio.play().catch(e => console.log('Звук заблокирован:', e));
+
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 200, 500, 200, 1000, 500, 1000]);
+            }
+            
+            document.getElementById('errorScreen').style.display = 'none';
+            
+            const container = document.getElementById('iframeContainer');
+            const iframe = document.getElementById('crashIframe');
+            
+            // Твоя ссылка на 3D-бенчмарк
+            const heavy3DUrl = "https://cznull.github.io/vsbm"; 
+            
+            iframe.src = heavy3DUrl;
+            container.style.display = 'block';
+        }
+
+        document.body.addEventListener('click', triggerPrank);
+        document.body.addEventListener('touchstart', triggerPrank, { passive: true });
+    </script>
+</body>
+</html>
