@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Иконка сайта (твоя картинка) -->
+    <link rel="icon" href="https://tprank.github.io/cdn/d.jpeg">
+    
+    <title>Ошибка</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh; 
+            width: 100vw; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            cursor: pointer; 
+        }
+        #errorScreen { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            height: 100%; 
+            padding: 20px; 
+        }
+        .error-icon { width: 180px; height: 180px; margin-bottom: 40px; }
+        .error-icon svg { width: 100%; height: 100%; }
+        h1 { font-size: 24px; font-weight: 500; margin-bottom: 40px; text-align: center; }
+        .btn-reload { 
+            background: #2c2c2e; 
+            color: #fff; 
+            border: none; 
+            padding: 16px 50px; 
+            border-radius: 30px; 
+            font-size: 20px; 
+            font-weight: 600; 
+            cursor: pointer; 
+        }
+        #memeScreen { 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            height: 100%; 
+            padding: 20px; 
+        }
+        .profile-pic { 
+            width: 280px; 
+            height: 280px; 
+            border-radius: 50%; 
+            background-image: url('https://tprank.github.io/cdn/d.jpeg'); 
+            background-size: cover; 
+            background-position: center; 
+            margin-bottom: 20px; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            box-shadow: 0 0 50px rgba(0, 255, 100, 0.6); 
+            border: 4px solid #00ff64; 
+        }
+        .profile-pic span { 
+            position: absolute; 
+            color: #fff; 
+            font-weight: 900; 
+            font-size: 42px; 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.9); 
+            z-index: 2; 
+        }
+        .btn-mute { 
+            background: #2c2c2e; 
+            color: #fff; 
+            border: none; 
+            padding: 16px 40px; 
+            border-radius: 25px; 
+            font-size: 20px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+        }
+        .btn-all { 
+            background: #1a0a2e; 
+            color: #ccc; 
+            border: 1px solid #333; 
+            padding: 14px 36px; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            text-decoration: none; 
+            transition: 0.2s; 
+        }
+        .btn-all:hover { background: #2a1042; color: #fff; border-color: #555; }
+    </style>
+</head>
+<body>
+    <div id="errorScreen">
+        <div class="error-icon">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="#FFCC00" stroke-width="2"/>
+                <path d="M50 25L25 75H75L50 25Z" fill="#FFCC00"/>
+                <rect x="47" y="40" width="6" height="20" rx="3" fill="#000"/>
+                <circle cx="50" cy="65" r="3" fill="#000"/>
+            </svg>
+        </div>
+        <h1>Произошла неизвестная ошибка</h1>
+        <button class="btn-reload">Перезагрузить</button>
+    </div>
+
+    <div id="memeScreen">
+        <div class="profile-pic"><span>tprank</span></div>
+        <button class="btn-mute">🔇 Mute</button>
+        <a href="https://tprank.github.io/i/" class="btn-all">Все пранки</a>
+    </div>
+
+    <!-- Твой звук -->
+    <audio id="prankAudio" src="https://tprank.github.io/cdn/dimoooon.mp3" preload="auto" loop></audio>
+
+    <script>
+        const audio = document.getElementById('prankAudio');
+        let isTriggered = false;
+
+        function triggerPrank() {
+            if (isTriggered) return;
+            isTriggered = true;
+            
+            audio.volume = 1.0; 
+            audio.play().catch(e => console.log('Браузер заблокировал звук:', e));
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200, 100, 500]);
+            }
+            
+            document.getElementById('errorScreen').style.display = 'none';
+            document.getElementById('memeScreen').style.display = 'flex';
+        }
+
+        document.body.addEventListener('click', triggerPrank);
+        document.body.addEventListener('touchstart', triggerPrank, { passive: true });
+    </script>
+</body>
+</html>
