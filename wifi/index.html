@@ -16,11 +16,12 @@
             background-image: radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 40%),
                               radial-gradient(circle at 90% 80%, rgba(120, 86, 255, 0.1) 0%, transparent 40%);
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+            overflow: hidden; /* Чтобы копии не создавали скролл */
         }
         .container {
             width: 100%; max-width: 400px; background: var(--glass); backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; text-align: center;
-            transition: 0.5s;
+            transition: 0.5s; position: relative; z-index: 10;
         }
         .icon {
             font-size: 60px; margin-bottom: 20px; color: var(--accent);
@@ -47,17 +48,32 @@
             height: 100%; background: var(--accent); width: 0%; transition: width 2s ease;
         }
         
-        .punchline {
-            display: none; animation: fadeIn 0.5s ease;
+        /* СТИЛИ ДЛЯ ЛЕТАЮЩИХ КАРТИНОК */
+        .meme-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 1000; display: none; overflow: hidden;
+            background: rgba(0,0,0,0.3); /* Легкое затемнение фона */
         }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .flying-meme {
+            position: absolute;
+            width: 150px; /* Размер каждой копии */
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            animation: fly linear infinite;
+        }
+        @keyframes fly {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(100vw, 100vh) rotate(360deg); }
+        }
         
-        .meme-image {
-            width: 100%; max-width: 300px; border-radius: 16px; margin: 20px auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* Кнопка закрытия */
+        .close-overlay-btn {
+            position: fixed; top: 20px; right: 20px; z-index: 1100;
+            background: rgba(255, 71, 87, 0.8); border: none; border-radius: 50%;
+            width: 50px; height: 50px; color: white; font-size: 24px; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
         }
-        .punchline h2 { font-size: 2.5rem; color: var(--accent); margin-bottom: 15px; }
-        .punchline p { font-size: 1.2rem; color: var(--text); }
     </style>
 </head>
 <body>
@@ -71,14 +87,13 @@
                 <div class="loading-fill" id="loadingFill"></div>
             </div>
         </div>
-        
-        <div class="punchline" id="punchlineScreen">
-            <img src="https://tprank.github.io/cdn/monkeymeme.jpeg" alt="Monkey Meme" class="meme-image" onerror="this.style.display='none'">
-            <h2>Облом!</h2>
-            <p>Это был пранк 😂<br>Бесплатного Wi-Fi не существует.</p>
-            <button class="btn" style="margin-top: 20px;" onclick="location.reload()">Попробовать снова</button>
-        </div>
     </div>
+
+    <!-- Оверлей для летающих картинок -->
+    <div class="meme-overlay" id="memeOverlay">
+        <!-- Копии будут добавляться через JS -->
+    </div>
+    <button class="close-overlay-btn" id="closeOverlayBtn" onclick="closePrank()">×</button>
 
     <audio id="prankSound" src="https://tprank.github.io/cdn/vizg-svini 2.mp3" preload="auto"></audio>
 
@@ -96,17 +111,73 @@
                 loadingFill.style.width = '100%';
             }, 100);
             
-            // Через 2.5 секунды показываем пранк и включаем звук
+            // Через 2.5 секунды начинаем пранк
             setTimeout(() => {
-                document.getElementById('connectScreen').style.display = 'none';
-                document.getElementById('punchlineScreen').style.display = 'block';
-                document.getElementById('mainContainer').style.borderColor = 'var(--accent)';
+                // Скрываем экран подключения
+                document.getElementById('mainContainer').style.display = 'none';
                 
-                // Включаем звук
+                // Показываем оверлей и кнопку закрытия
+                document.getElementById('memeOverlay').style.display = 'block';
+                document.getElementById('closeOverlayBtn').style.display = 'flex';
+                
+                // Запускаем звук на полную громкость
                 const sound = document.getElementById('prankSound');
                 sound.volume = 1.0;
-                sound.play().catch(e => console.log('Звук не проигрался:', e));
+                sound.play().catch(e => console.log('Звук заблокирован:', e));
+                
+                // Создаем много копий картинки
+                createFlyingMemes();
             }, 2500);
+        }
+
+        function createFlyingMemes() {
+            const overlay = document.getElementById('memeOverlay');
+            const count = 30; // Количество копий
+            const imageUrl = "https://tprank.github.io/cdn/monkeymeme.jpeg";
+
+            for (let i = 0; i < count; i++) {
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.className = 'flying-meme';
+                
+                // Случайная начальная позиция
+                const startX = Math.random() * 100; // в процентах
+                const startY = Math.random() * 100;
+                img.style.left = startX + 'vw';
+                img.style.top = startY + 'vh';
+                
+                // Случайная задержка анимации, чтобы они летели хаотично
+                img.style.animationDelay = (Math.random() * 2) + 's';
+                // Случайная длительность полета
+                img.style.animationDuration = (2 + Math.random() * 3) + 's';
+                
+                overlay.appendChild(img);
+            }
+        }
+
+        function closePrank() {
+            // Останавливаем звук
+            const sound = document.getElementById('prankSound');
+            sound.pause();
+            sound.currentTime = 0;
+            
+            // Убираем все картинки
+            const overlay = document.getElementById('memeOverlay');
+            overlay.innerHTML = '';
+            overlay.style.display = 'none';
+            document.getElementById('closeOverlayBtn').style.display = 'none';
+            
+            // Возвращаем экран подключения
+            document.getElementById('mainContainer').style.display = 'block';
+            
+            // Сбрасываем кнопку и прогресс-бар
+            const btn = document.querySelector('.btn');
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingFill = document.getElementById('loadingFill');
+            
+            btn.style.display = 'block';
+            loadingBar.style.display = 'none';
+            loadingFill.style.width = '0%';
         }
     </script>
 </body>
