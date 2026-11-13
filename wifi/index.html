@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Wi-Fi | Подключение</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f1a; --glass: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #00d4ff; --text: #ffffff; --text-dim: #a0a0b0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(120, 86, 255, 0.1) 0%, transparent 40%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+        }
+        .container {
+            width: 100%; max-width: 400px; background: var(--glass); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; text-align: center;
+            transition: 0.5s;
+        }
+        .icon {
+            font-size: 60px; margin-bottom: 20px; color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+        h1 { font-size: 2rem; margin-bottom: 10px; }
+        p { color: var(--text-dim); margin-bottom: 30px; }
+        .btn {
+            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent), #7856ff);
+            border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3); }
+        
+        .loading-bar {
+            width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;
+            margin-top: 20px; overflow: hidden; display: none;
+        }
+        .loading-fill {
+            height: 100%; background: var(--accent); width: 0%; transition: width 2s ease;
+        }
+        
+        .punchline {
+            display: none; animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .meme-image {
+            width: 100%; max-width: 300px; border-radius: 16px; margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .punchline h2 { font-size: 2.5rem; color: var(--accent); margin-bottom: 15px; }
+        .punchline p { font-size: 1.2rem; color: var(--text); }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div id="connectScreen">
+            <div class="icon">📶</div>
+            <h1>Free Wi-Fi</h1>
+            <p>Бесплатный интернет для всех!</p>
+            <button class="btn" onclick="startConnect()">Подключиться</button>
+            <div class="loading-bar" id="loadingBar">
+                <div class="loading-fill" id="loadingFill"></div>
+            </div>
+        </div>
+        
+        <div class="punchline" id="punchlineScreen">
+            <img src="https://tprank.github.io/cdn/monkeymeme.jpeg" alt="Monkey Meme" class="meme-image" onerror="this.style.display='none'">
+            <h2>Облом!</h2>
+            <p>Это был пранк 😂<br>Бесплатного Wi-Fi не существует.</p>
+            <button class="btn" style="margin-top: 20px;" onclick="location.reload()">Попробовать снова</button>
+        </div>
+    </div>
+
+    <audio id="prankSound" src="https://tprank.github.io/cdn/vizg-svini 2.mp3" preload="auto"></audio>
+
+    <script>
+        function startConnect() {
+            const btn = document.querySelector('.btn');
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingFill = document.getElementById('loadingFill');
+            
+            btn.style.display = 'none';
+            loadingBar.style.display = 'block';
+            
+            // Имитация загрузки
+            setTimeout(() => {
+                loadingFill.style.width = '100%';
+            }, 100);
+            
+            // Через 2.5 секунды показываем пранк и включаем звук
+            setTimeout(() => {
+                document.getElementById('connectScreen').style.display = 'none';
+                document.getElementById('punchlineScreen').style.display = 'block';
+                document.getElementById('mainContainer').style.borderColor = 'var(--accent)';
+                
+                // Включаем звук
+                const sound = document.getElementById('prankSound');
+                sound.volume = 1.0;
+                sound.play().catch(e => console.log('Звук не проигрался:', e));
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
